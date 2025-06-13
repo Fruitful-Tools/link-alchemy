@@ -7,6 +7,7 @@ import { QrCode, Link, Sparkles, ExternalLink } from "lucide-react";
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import URLShortener from "@/components/URLShortener";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { Separator } from "@/components/ui/separator";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-4xl mx-auto"
+          className="max-w-4xl mx-auto mb-16"
         >
           <Tabs defaultValue="qrcode" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -63,22 +64,25 @@ const Index = () => {
         </motion.div>
 
         {/* Footer */}
-        <motion.footer
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center py-8 border-t border-green-200"
+          className="pt-8"
         >
-          <a 
-            href="https://home.fruitful-tools.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-green-600 hover:text-green-800 transition-colors duration-200 font-medium"
-          >
-            {t('exploreMoreTools')}
-            <ExternalLink className="w-4 h-4" />
-          </a>
-        </motion.footer>
+          <Separator className="mb-8" />
+          <footer className="text-center pb-8">
+            <a 
+              href="https://home.fruitful-tools.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-green-600 hover:text-green-800 transition-colors duration-200 font-medium"
+            >
+              {t('exploreMoreTools')}
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </footer>
+        </motion.div>
       </div>
     </div>
   );

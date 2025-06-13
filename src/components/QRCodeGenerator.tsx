@@ -19,7 +19,7 @@ const QRCodeGenerator = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoUrl, setLogoUrl] = useState("");
-  const [size, setSize] = useState([400]);
+  const [size, setSize] = useState([350]);
   const [errorLevel, setErrorLevel] = useState("M");
   const [foreground, setForeground] = useState("#000000");
   const [background, setBackground] = useState("#ffffff");
