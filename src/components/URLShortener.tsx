@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,13 +51,23 @@ const URLShortener = () => {
     localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
   }, [shortenedUrls]);
 
-  const generateShortCode = () => {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-    for (let i = 0; i < 6; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+  // Reversible URL encoding function
+  const encodeUrl = (url: string, expiresAt: Date | null = null): string => {
+    // Create a data object with URL and expiration
+    const data = {
+      url: url,
+      exp: expiresAt ? Math.floor(expiresAt.getTime() / 1000) : null
+    };
+    
+    // Convert to JSON and then to base64
+    const jsonString = JSON.stringify(data);
+    const base64 = btoa(encodeURIComponent(jsonString));
+    
+    // Make it URL-safe and shorter by replacing characters and removing padding
+    return base64
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
   };
 
   const calculateExpirationDate = () => {
@@ -110,19 +121,27 @@ const URLShortener = () => {
       return;
     }
 
-    const shortCode = customAlias.trim() || generateShortCode();
+    const expiresAt = calculateExpirationDate();
+    let shortCode: string;
     
-    // Check if custom alias already exists
-    if (customAlias.trim() && shortenedUrls.some(url => url.shortCode === shortCode)) {
-      toast({
-        title: "Error",
-        description: "Custom alias already exists. Please choose a different one.",
-        variant: "destructive",
-      });
-      return;
+    if (customAlias.trim()) {
+      // Use custom alias
+      shortCode = customAlias.trim();
+      
+      // Check if custom alias already exists
+      if (shortenedUrls.some(url => url.shortCode === shortCode)) {
+        toast({
+          title: "Error",
+          description: "Custom alias already exists. Please choose a different one.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      // Use encoded URL as short code
+      shortCode = encodeUrl(originalUrl, expiresAt);
     }
 
-    const expiresAt = calculateExpirationDate();
     const newUrl: ShortenedUrl = {
       id: Date.now().toString(),
       originalUrl,
@@ -207,6 +226,9 @@ const URLShortener = () => {
                 placeholder="my-custom-link"
                 maxLength={20}
               />
+              <p className="text-xs text-gray-500">
+                Leave empty to use auto-generated hash-based short code
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -268,7 +290,7 @@ const URLShortener = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
-                          <code className="text-lg font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                          <code className="text-lg font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded break-all">
                             {window.location.origin}/{url.shortCode}
                           </code>
                           {isExpired(url) && (

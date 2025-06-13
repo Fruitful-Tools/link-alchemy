@@ -2,20 +2,82 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-// This would typically come from a database or external storage
-// For now, we'll use localStorage as a simple solution
 const URLRedirect = () => {
   const { shortCode } = useParams<{ shortCode: string }>();
   const [status, setStatus] = useState<string>("Looking up your link...");
   const [foundUrl, setFoundUrl] = useState<any>(null);
 
+  // Reversible URL decoding function
+  const decodeUrl = (shortCode: string): { url: string; exp: number | null } | null => {
+    try {
+      // Restore base64 padding and characters
+      let base64 = shortCode
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+      
+      // Add padding if needed
+      while (base64.length % 4) {
+        base64 += '=';
+      }
+      
+      // Decode from base64
+      const jsonString = decodeURIComponent(atob(base64));
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error("Error decoding short code:", error);
+      return null;
+    }
+  };
+
+  const updateClickCount = (shortCode: string) => {
+    const storedUrls = localStorage.getItem('shortenedUrls');
+    if (storedUrls) {
+      try {
+        const urls = JSON.parse(storedUrls);
+        const urlIndex = urls.findIndex((url: any) => url.shortCode === shortCode);
+        if (urlIndex !== -1) {
+          urls[urlIndex].clicks = (urls[urlIndex].clicks || 0) + 1;
+          localStorage.setItem('shortenedUrls', JSON.stringify(urls));
+        }
+      } catch (error) {
+        console.error("Error updating click count:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     if (shortCode) {
       console.log("Attempting to redirect for short code:", shortCode);
       
-      // Get stored URLs from localStorage
+      // First try to decode the URL directly from the short code
+      const decodedData = decodeUrl(shortCode);
+      
+      if (decodedData) {
+        console.log("Decoded data:", decodedData);
+        
+        // Check if URL is expired
+        if (decodedData.exp && Date.now() / 1000 > decodedData.exp) {
+          console.log("URL has expired");
+          setStatus("This link has expired");
+          return;
+        }
+        
+        setFoundUrl({ originalUrl: decodedData.url });
+        updateClickCount(shortCode);
+        
+        console.log("Redirecting to:", decodedData.url);
+        setStatus("Redirecting now...");
+        
+        // Add a small delay to show the status, then redirect
+        setTimeout(() => {
+          window.location.href = decodedData.url;
+        }, 1000);
+        return;
+      }
+      
+      // Fallback: check localStorage for custom aliases
       const storedUrls = localStorage.getItem('shortenedUrls');
-      console.log("Stored URLs:", storedUrls);
+      console.log("Checking localStorage for custom alias:", storedUrls);
       
       if (storedUrls) {
         try {
@@ -23,7 +85,7 @@ const URLRedirect = () => {
           console.log("Parsed URLs:", urls);
           
           const foundUrl = urls.find((url: any) => url.shortCode === shortCode);
-          console.log("Found URL:", foundUrl);
+          console.log("Found URL in localStorage:", foundUrl);
           
           if (foundUrl) {
             setFoundUrl(foundUrl);
@@ -66,7 +128,7 @@ const URLRedirect = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">
-          {foundUrl && !foundUrl.expiresAt || (foundUrl?.expiresAt && new Date() <= new Date(foundUrl.expiresAt)) 
+          {foundUrl && (foundUrl.exp === null || foundUrl.exp === undefined || Date.now() / 1000 <= foundUrl.exp)
             ? "Redirecting..." 
             : "Link Issue"
           }
@@ -75,7 +137,7 @@ const URLRedirect = () => {
           {status}
         </p>
         {foundUrl && (
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-500 mb-4 break-all">
             Destination: {foundUrl.originalUrl}
           </p>
         )}
