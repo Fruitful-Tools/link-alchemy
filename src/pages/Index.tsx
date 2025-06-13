@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { QrCode, Link, Sparkles } from "lucide-react";
+import { QrCode, Link, Sparkles, ExternalLink } from "lucide-react";
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import URLShortener from "@/components/URLShortener";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -67,18 +67,17 @@ const Index = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-16"
+          className="text-center py-8 border-t border-green-200"
         >
-          <div className="text-slate-500">
-            <a 
-              href="https://home.fruitful-tools.com/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:text-green-600 transition-colors duration-200"
-            >
-              {t('footer.exploreMore')}
-            </a>
-          </div>
+          <a 
+            href="https://home.fruitful-tools.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-green-600 hover:text-green-800 transition-colors duration-200 font-medium"
+          >
+            {t('exploreMoreTools')}
+            <ExternalLink className="w-4 h-4" />
+          </a>
         </motion.footer>
       </div>
     </div>

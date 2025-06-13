@@ -32,7 +32,5 @@
       "downloaded": "QR code downloaded successfully!"
     }
   },
-  "footer": {
-    "exploreMore": "Explore more by fruitful tools"
-  }
+  "exploreMoreTools": "Explore more fruitful tools"
 }
