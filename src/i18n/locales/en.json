@@ -1,0 +1,38 @@
+
+{
+  "title": "Link Alchemy",
+  "subtitle": "Create stunning QR codes with custom logos and shorten URLs with expiration control",
+  "qrcode": "QR Code Generator",
+  "urlshortener": "URL Shortener",
+  "qr": {
+    "settings": "QR Code Settings",
+    "textUrl": "Text or URL",
+    "textUrlPlaceholder": "Enter text or URL to encode",
+    "size": "Size",
+    "errorLevel": "Error Correction Level",
+    "errorLevels": {
+      "L": "Low (7%)",
+      "M": "Medium (15%)",
+      "Q": "Quartile (25%)",
+      "H": "High (30%)"
+    },
+    "foregroundColor": "Foreground Color",
+    "backgroundColor": "Background Color",
+    "logo": "Logo (Optional)",
+    "uploadLogo": "Upload Logo",
+    "preview": "Preview",
+    "download": "Download QR Code",
+    "errors": {
+      "emptyText": "Please enter text or URL to generate QR code",
+      "generateFailed": "Failed to generate QR code",
+      "fileTooLarge": "Logo file size must be less than 5MB",
+      "generateFirst": "Please generate a QR code first"
+    },
+    "success": {
+      "downloaded": "QR code downloaded successfully!"
+    }
+  },
+  "footer": {
+    "exploreMore": "Explore more by fruitful tools"
+  }
+}

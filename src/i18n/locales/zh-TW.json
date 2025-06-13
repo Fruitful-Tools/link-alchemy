@@ -1,0 +1,38 @@
+
+{
+  "title": "Link Alchemy",
+  "subtitle": "製作帶有自定義標誌的精美二維碼，並創建具有過期控制的短網址",
+  "qrcode": "二維碼生成器",
+  "urlshortener": "網址縮短器",
+  "qr": {
+    "settings": "二維碼設定",
+    "textUrl": "文字或網址",
+    "textUrlPlaceholder": "輸入要編碼的文字或網址",
+    "size": "尺寸",
+    "errorLevel": "錯誤糾正等級",
+    "errorLevels": {
+      "L": "低 (7%)",
+      "M": "中 (15%)",
+      "Q": "四分之一 (25%)",
+      "H": "高 (30%)"
+    },
+    "foregroundColor": "前景色",
+    "backgroundColor": "背景色",
+    "logo": "標誌 (選用)",
+    "uploadLogo": "上傳標誌",
+    "preview": "預覽",
+    "download": "下載二維碼",
+    "errors": {
+      "emptyText": "請輸入文字或網址以生成二維碼",
+      "generateFailed": "生成二維碼失敗",
+      "fileTooLarge": "標誌檔案大小必須小於 5MB",
+      "generateFirst": "請先生成二維碼"
+    },
+    "success": {
+      "downloaded": "二維碼下載成功！"
+    }
+  },
+  "footer": {
+    "exploreMore": "探索更多 by fruitful tools"
+  }
+}

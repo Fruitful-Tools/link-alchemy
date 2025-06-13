@@ -1,5 +1,7 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +14,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import QRCode from "qrcode";
 
 const QRCodeGenerator = () => {
+  const { t } = useTranslation();
   const [text, setText] = useState("https://example.com");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -29,7 +32,7 @@ const QRCodeGenerator = () => {
       if (!text.trim()) {
         toast({
           title: "Error",
-          description: "Please enter text or URL to generate QR code",
+          description: t('qr.errors.emptyText'),
           variant: "destructive",
         });
         return;
@@ -85,7 +88,7 @@ const QRCodeGenerator = () => {
       console.error("Error generating QR code:", error);
       toast({
         title: "Error",
-        description: "Failed to generate QR code",
+        description: t('qr.errors.generateFailed'),
         variant: "destructive",
       });
     }
@@ -97,7 +100,7 @@ const QRCodeGenerator = () => {
       if (file.size > 5 * 1024 * 1024) { // 5MB limit
         toast({
           title: "Error",
-          description: "Logo file size must be less than 5MB",
+          description: t('qr.errors.fileTooLarge'),
           variant: "destructive",
         });
         return;
@@ -124,7 +127,7 @@ const QRCodeGenerator = () => {
     if (!qrCodeUrl) {
       toast({
         title: "Error",
-        description: "Please generate a QR code first",
+        description: t('qr.errors.generateFirst'),
         variant: "destructive",
       });
       return;
@@ -137,7 +140,7 @@ const QRCodeGenerator = () => {
 
     toast({
       title: "Success",
-      description: "QR code downloaded successfully!",
+      description: t('qr.success.downloaded'),
     });
   };
 
@@ -155,21 +158,21 @@ const QRCodeGenerator = () => {
       >
         <Card>
           <CardHeader>
-            <CardTitle>QR Code Settings</CardTitle>
+            <CardTitle>{t('qr.settings')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="text">Text or URL</Label>
+              <Label htmlFor="text">{t('qr.textUrl')}</Label>
               <Input
                 id="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="Enter text or URL to encode"
+                placeholder={t('qr.textUrlPlaceholder')}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Size: {size[0]}px</Label>
+              <Label>{t('qr.size')}: {size[0]}px</Label>
               <Slider
                 value={size}
                 onValueChange={setSize}
@@ -181,23 +184,23 @@ const QRCodeGenerator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="errorLevel">Error Correction Level</Label>
+              <Label htmlFor="errorLevel">{t('qr.errorLevel')}</Label>
               <Select value={errorLevel} onValueChange={setErrorLevel}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="L">Low (7%)</SelectItem>
-                  <SelectItem value="M">Medium (15%)</SelectItem>
-                  <SelectItem value="Q">Quartile (25%)</SelectItem>
-                  <SelectItem value="H">High (30%)</SelectItem>
+                  <SelectItem value="L">{t('qr.errorLevels.L')}</SelectItem>
+                  <SelectItem value="M">{t('qr.errorLevels.M')}</SelectItem>
+                  <SelectItem value="Q">{t('qr.errorLevels.Q')}</SelectItem>
+                  <SelectItem value="H">{t('qr.errorLevels.H')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="foreground">Foreground Color</Label>
+                <Label htmlFor="foreground">{t('qr.foregroundColor')}</Label>
                 <div className="flex gap-2">
                   <Input
                     id="foreground"
@@ -215,7 +218,7 @@ const QRCodeGenerator = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="background">Background Color</Label>
+                <Label htmlFor="background">{t('qr.backgroundColor')}</Label>
                 <div className="flex gap-2">
                   <Input
                     id="background"
@@ -234,7 +237,7 @@ const QRCodeGenerator = () => {
             </div>
 
             <div className="space-y-4">
-              <Label>Logo (Optional)</Label>
+              <Label>{t('qr.logo')}</Label>
               <div className="flex flex-col gap-2">
                 <Button
                   variant="outline"
@@ -242,7 +245,7 @@ const QRCodeGenerator = () => {
                   className="w-full"
                 >
                   <Upload className="h-4 w-4 mr-2" />
-                  Upload Logo
+                  {t('qr.uploadLogo')}
                 </Button>
                 <input
                   ref={fileInputRef}
@@ -279,7 +282,7 @@ const QRCodeGenerator = () => {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Preview</CardTitle>
+            <CardTitle>{t('qr.preview')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-center">
@@ -299,7 +302,7 @@ const QRCodeGenerator = () => {
               className="w-full"
             >
               <Download className="h-4 w-4 mr-2" />
-              Download QR Code
+              {t('qr.download')}
             </Button>
           </CardContent>
         </Card>
