@@ -20,7 +20,7 @@ const Index = () => {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="h-8 w-8 text-green-600" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-              LinkCraft
+              Link Alchemy
             </h1>
           </div>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
