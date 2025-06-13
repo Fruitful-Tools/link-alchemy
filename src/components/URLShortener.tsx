@@ -1,12 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Copy, ExternalLink, Clock, Check } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Copy, ExternalLink, Clock, Check, X, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ShortenedUrl {
@@ -19,6 +20,8 @@ interface ShortenedUrl {
 }
 
 const URLShortener = () => {
+  const { t } = useTranslation();
+  const [showWarning, setShowWarning] = useState(true);
   const [originalUrl, setOriginalUrl] = useState("");
   const [customAlias, setCustomAlias] = useState("");
   const [expirationValue, setExpirationValue] = useState("");
@@ -195,6 +198,36 @@ const URLShortener = () => {
 
   return (
     <div className="space-y-8">
+      {/* Warning Alert */}
+      {showWarning && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Alert className="border-amber-200 bg-amber-50">
+            <AlertTriangle className="h-4 w-4 text-amber-600" />
+            <div className="flex justify-between items-start w-full">
+              <div className="flex-1">
+                <AlertTitle className="text-amber-800">{t('url.warning.title')}</AlertTitle>
+                <AlertDescription className="text-amber-700 mt-2">
+                  {t('url.warning.message')}
+                </AlertDescription>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowWarning(false)}
+                className="text-amber-600 hover:text-amber-800 hover:bg-amber-100 ml-2 h-6 w-6 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </Alert>
+        </motion.div>
+      )}
+
       {/* URL Shortening Form */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

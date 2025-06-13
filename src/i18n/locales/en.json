@@ -32,5 +32,11 @@
       "downloaded": "QR code downloaded successfully!"
     }
   },
+  "url": {
+    "warning": {
+      "title": "Conceptual Demo Notice",
+      "message": "This URL shortener might not actually shorten your URL. This is a conceptual demo that uses a 2-way hash to encode URLs as we don't have the budget to create a separate database for this tool. A proper URL shortener should use a backend database to store URL mappings, generate truly short codes, and provide reliable redirects for all users."
+    }
+  },
   "exploreMoreTools": "Explore more fruitful tools"
 }
