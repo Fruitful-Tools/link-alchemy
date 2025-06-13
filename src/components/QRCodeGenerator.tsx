@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, Download, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import QRCode from "qrcode";
 
 const QRCodeGenerator = () => {
@@ -283,12 +283,13 @@ const QRCodeGenerator = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-center">
-              <div className="relative">
-                <canvas
-                  ref={canvasRef}
-                  className="border border-slate-200 rounded-lg shadow-sm max-w-full h-auto"
-                  style={{ maxWidth: "300px" }}
-                />
+              <div className="w-full max-w-sm">
+                <AspectRatio ratio={1}>
+                  <canvas
+                    ref={canvasRef}
+                    className="border border-slate-200 rounded-lg shadow-sm w-full h-full object-contain"
+                  />
+                </AspectRatio>
               </div>
             </div>
 
