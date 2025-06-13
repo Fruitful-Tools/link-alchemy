@@ -286,11 +286,12 @@ const QRCodeGenerator = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-center">
-              <div className="w-full max-w-sm">
-                <AspectRatio ratio={1}>
+              <div className="w-full max-w-xs sm:max-w-sm">
+                <AspectRatio ratio={1} className="overflow-hidden">
                   <canvas
                     ref={canvasRef}
-                    className="border border-slate-200 rounded-lg shadow-sm w-full h-full object-contain"
+                    className="border border-slate-200 rounded-lg shadow-sm w-full h-full object-contain max-w-full max-h-full"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
                   />
                 </AspectRatio>
               </div>
@@ -299,7 +300,7 @@ const QRCodeGenerator = () => {
             <Button
               onClick={downloadQRCode}
               disabled={!qrCodeUrl}
-              className="w-full"
+              className="w-full mt-4"
             >
               <Download className="h-4 w-4 mr-2" />
               {t('qr.download')}
