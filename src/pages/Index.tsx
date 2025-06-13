@@ -39,7 +39,7 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-4xl mx-auto mb-16"
+          className="max-w-4xl mx-auto mb-4"
         >
           <Tabs defaultValue="qrcode" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8">
