@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,6 +25,30 @@ const URLShortener = () => {
   const [shortenedUrls, setShortenedUrls] = useState<ShortenedUrl[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { toast } = useToast();
+
+  // Load URLs from localStorage on component mount
+  useEffect(() => {
+    const storedUrls = localStorage.getItem('shortenedUrls');
+    if (storedUrls) {
+      try {
+        const urls = JSON.parse(storedUrls);
+        // Convert date strings back to Date objects
+        const urlsWithDates = urls.map((url: any) => ({
+          ...url,
+          createdAt: new Date(url.createdAt),
+          expiresAt: url.expiresAt ? new Date(url.expiresAt) : null,
+        }));
+        setShortenedUrls(urlsWithDates);
+      } catch (error) {
+        console.error("Error loading URLs from localStorage:", error);
+      }
+    }
+  }, []);
+
+  // Save URLs to localStorage whenever the list changes
+  useEffect(() => {
+    localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
+  }, [shortenedUrls]);
 
   const generateShortCode = () => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
