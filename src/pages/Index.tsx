@@ -62,9 +62,18 @@ const Index = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-16 text-slate-500"
+          className="text-center mt-16"
         >
-          <p>Built with React, Tailwind CSS, and modern web technologies</p>
+          <div className="text-slate-500">
+            <a 
+              href="https://home.fruitful-tools.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-green-600 transition-colors duration-200"
+            >
+              探索更多 by fruitful tools
+            </a>
+          </div>
         </motion.footer>
       </div>
     </div>
