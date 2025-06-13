@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { QrCode, Link, Sparkles, ExternalLink } from "lucide-react";
+import { QrCode, Link, Sparkles, ExternalLink, Github } from "lucide-react";
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import URLShortener from "@/components/URLShortener";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -72,15 +72,26 @@ const Index = () => {
         >
           <Separator className="mb-8" />
           <footer className="text-center pb-8">
-            <a 
-              href="https://home.fruitful-tools.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-green-600 hover:text-green-800 transition-colors duration-200 font-medium"
-            >
-              {t('exploreMoreTools')}
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <a 
+                href="https://home.fruitful-tools.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-green-600 hover:text-green-800 transition-colors duration-200 font-medium"
+              >
+                {t('exploreMoreTools')}
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <a 
+                href="https://github.com/Fruitful-Tools/link-alchemy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-green-600 hover:text-green-800 transition-colors duration-200 font-medium"
+              >
+                <Github className="w-4 h-4" />
+                {t('contributing')}
+              </a>
+            </div>
           </footer>
         </motion.div>
       </div>
