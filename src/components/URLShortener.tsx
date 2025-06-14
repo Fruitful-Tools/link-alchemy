@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Copy, ExternalLink, Clock, Check, X, AlertTriangle } from "lucide-react";
+import { Copy, ExternalLink, Clock, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ShortenedUrl {
@@ -20,8 +19,6 @@ interface ShortenedUrl {
 }
 
 const URLShortener = () => {
-  const { t } = useTranslation();
-  const [showWarning, setShowWarning] = useState(true);
   const [originalUrl, setOriginalUrl] = useState("");
   const [customAlias, setCustomAlias] = useState("");
   const [expirationValue, setExpirationValue] = useState("");
@@ -30,47 +27,13 @@ const URLShortener = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Load URLs from localStorage on component mount
-  useEffect(() => {
-    const storedUrls = localStorage.getItem('shortenedUrls');
-    if (storedUrls) {
-      try {
-        const urls = JSON.parse(storedUrls);
-        // Convert date strings back to Date objects
-        const urlsWithDates = urls.map((url: any) => ({
-          ...url,
-          createdAt: new Date(url.createdAt),
-          expiresAt: url.expiresAt ? new Date(url.expiresAt) : null,
-        }));
-        setShortenedUrls(urlsWithDates);
-      } catch (error) {
-        console.error("Error loading URLs from localStorage:", error);
-      }
+  const generateShortCode = () => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let result = "";
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-  }, []);
-
-  // Save URLs to localStorage whenever the list changes
-  useEffect(() => {
-    localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
-  }, [shortenedUrls]);
-
-  // Reversible URL encoding function
-  const encodeUrl = (url: string, expiresAt: Date | null = null): string => {
-    // Create a data object with URL and expiration
-    const data = {
-      url: url,
-      exp: expiresAt ? Math.floor(expiresAt.getTime() / 1000) : null
-    };
-    
-    // Convert to JSON and then to base64
-    const jsonString = JSON.stringify(data);
-    const base64 = btoa(encodeURIComponent(jsonString));
-    
-    // Make it URL-safe and shorter by replacing characters and removing padding
-    return base64
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '');
+    return result;
   };
 
   const calculateExpirationDate = () => {
@@ -124,27 +87,19 @@ const URLShortener = () => {
       return;
     }
 
-    const expiresAt = calculateExpirationDate();
-    let shortCode: string;
+    const shortCode = customAlias.trim() || generateShortCode();
     
-    if (customAlias.trim()) {
-      // Use custom alias
-      shortCode = customAlias.trim();
-      
-      // Check if custom alias already exists
-      if (shortenedUrls.some(url => url.shortCode === shortCode)) {
-        toast({
-          title: "Error",
-          description: "Custom alias already exists. Please choose a different one.",
-          variant: "destructive",
-        });
-        return;
-      }
-    } else {
-      // Use encoded URL as short code
-      shortCode = encodeUrl(originalUrl, expiresAt);
+    // Check if custom alias already exists
+    if (customAlias.trim() && shortenedUrls.some(url => url.shortCode === shortCode)) {
+      toast({
+        title: "Error",
+        description: "Custom alias already exists. Please choose a different one.",
+        variant: "destructive",
+      });
+      return;
     }
 
+    const expiresAt = calculateExpirationDate();
     const newUrl: ShortenedUrl = {
       id: Date.now().toString(),
       originalUrl,
@@ -198,36 +153,6 @@ const URLShortener = () => {
 
   return (
     <div className="space-y-8">
-      {/* Warning Alert */}
-      {showWarning && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Alert className="border-amber-200 bg-amber-50">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
-            <div className="flex justify-between items-start w-full">
-              <div className="flex-1">
-                <AlertTitle className="text-amber-800">{t('url.warning.title')}</AlertTitle>
-                <AlertDescription className="text-amber-700 mt-2">
-                  {t('url.warning.message')}
-                </AlertDescription>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowWarning(false)}
-                className="text-amber-600 hover:text-amber-800 hover:bg-amber-100 ml-2 h-6 w-6 p-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </Alert>
-        </motion.div>
-      )}
-
       {/* URL Shortening Form */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -259,9 +184,6 @@ const URLShortener = () => {
                 placeholder="my-custom-link"
                 maxLength={20}
               />
-              <p className="text-xs text-gray-500">
-                Leave empty to use auto-generated hash-based short code
-              </p>
             </div>
 
             <div className="space-y-2">
@@ -323,7 +245,7 @@ const URLShortener = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
-                          <code className="text-lg font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded break-all">
+                          <code className="text-lg font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
                             {window.location.origin}/{url.shortCode}
                           </code>
                           {isExpired(url) && (
