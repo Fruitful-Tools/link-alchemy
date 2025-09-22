@@ -60,7 +60,7 @@ const LogoUpload = ({ logoFile, logoUrl, onLogoUpload, onLogoRemove }: LogoUploa
         <input
           ref={fileInputRef}
           type="file"
-          accept=".png,image/png"
+          accept=".png,.svg,image/png,image/svg+xml"
           onChange={handleLogoUpload}
           className="hidden"
         />
